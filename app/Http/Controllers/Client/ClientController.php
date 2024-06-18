@@ -93,4 +93,33 @@ class ClientController extends Controller
 
         return view('client.categoryProducts', $data);
     }
+
+    public function about(){
+        $data = [
+            'shop' => Shop::first(),
+            'title' => 'About'
+        ];
+
+        return view('client.about', $data);
+    }
+
+    public function productDetail($product){
+
+        $product = Product::where('title', $product)->first();
+
+        if($product->category->product->count() > 1){
+            $recomendationProducts = $product->category->product->take(8);
+        }else{
+            $recomendationProducts = Product::all()->sortByDesc('id')->take(8);
+        }
+
+        $data = [
+            'shop' => Shop::first(),
+            'product' => $product,
+            'recomendationProducts' => $recomendationProducts,
+            'title' => str_replace('-', ' ', ucwords($product->title))
+        ];
+
+        return view('client.productDetail', $data);
+    }
 }  
