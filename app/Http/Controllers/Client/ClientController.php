@@ -157,4 +157,59 @@ class ClientController extends Controller
         }
     }
 
+    public function checkout(){
+        $data = [
+            'shop' => Shop::first(),
+            'title' => 'Checkout'
+        ];
+
+        return view('client.checkout', $data);
+    }
+
+    public function checkoutSave(Request $request){
+        $validator = Validator($request->all(), [
+            'name' => 'required',
+            'phone' => 'required',
+            'address' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return redirect()->route('clientCheckout')->withErrors($validator)->withInput();
+        }else{
+            $order_code = Str::random(3).'-'.Date('Ymd');
+
+            if(session('cart')){
+                $total = 0;
+                foreach((array) session('cart') as $id => $details){
+                    $total += $details['price'] * $details['quantity'];
+
+                    $data[$id] = [
+                        'order_code' => $order_code,
+                        'title' => $details['title'],
+                        'price' => $details['price'],
+                        'quantity' => $details['quantity'],
+                    ];
+                }
+
+                Order::create([
+                    'shop_id' => Shop::first()->id,
+                    'order_code' => $order_code,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'address' => $request->address,
+                    'note' => $request->note,
+                    'total' => $total,
+                    'status' => 0
+                ]);
+
+                OrderDetail::insert($data);
+
+                session()->forget('cart');
+
+                return redirect()->route('clientOrderCode', $order_code);
+            }
+
+        }
+    }
+
 }  
