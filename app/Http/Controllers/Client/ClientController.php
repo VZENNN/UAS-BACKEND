@@ -122,4 +122,39 @@ class ClientController extends Controller
 
         return view('client.productDetail', $data);
     }
+    
+    public function products(){
+        $data = [
+            'shop' => Shop::first(),
+            'product' => Product::orderBy('id', 'DESC')->paginate(16),
+            'category' => Category::all()->sortByDesc('id'),
+            'title' => 'Products'
+        ];
+
+        return view('client.products', $data);
+    }
+
+    public function searchProduct(Request $request){
+        $validator = Validator::make($request->all(), [
+            'product' => 'required'
+        ]);
+
+        if($validator->fails()){
+            return redirect()->route('clientHome')->withErrors($validator)->withInput();
+        }else{
+
+            $search = str_replace(' ', '-', strtolower($request->product));
+
+            $data = [
+                'title' => 'Result',
+                'shop' => Shop::first(),
+                'product' => Product::where('title', 'LIKE', '%'.$search.'%')->orderBy('id', 'DESC')->paginate(20),
+                'search' => $request->product
+            ];
+
+            return view('client.productSearch', $data);
+
+        }
+    }
+
 }  
