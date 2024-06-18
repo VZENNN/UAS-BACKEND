@@ -27,7 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        dd('te');
+
 
         if(!Auth::user()->shop){
             return view('admin.shop.create');
