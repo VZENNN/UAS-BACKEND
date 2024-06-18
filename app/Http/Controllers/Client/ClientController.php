@@ -73,4 +73,24 @@ class ClientController extends Controller
 
         return view('client.check-order', $data);
     }
-}
+
+    public function category(){
+        $data = [
+            'shop' => Shop::first(),
+            'category' => Category::orderBy('id', 'DESC')->paginate(12),
+            'title' => 'Products'
+        ];
+
+        return view('client.category', $data);
+    }
+
+    public function categoryProducts($category){
+        $data = [
+            'shop' => Shop::first(),
+            'category' => Category::where('name', $category)->first(),
+            'title' => 'Category - '.str_replace('-', ' ', ucwords($category))
+        ];
+
+        return view('client.categoryProducts', $data);
+    }
+}  
