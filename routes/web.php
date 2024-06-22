@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Client\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,13 @@ Route::controller(ClientController::class)->group(function(){
     Route::get('/check-order', 'checkOrder')->name('clientCheckOrder');
     Route::post('/check-order-status', 'checkOrderStatus')->name('clientCheckOrderStatus');
     Route::get('/about', 'about')->name('clientAbout');
+});
+
+Route::controller(CartController::class)->group(function(){
+    Route::get('/carts', 'carts')->name('clientCarts');
+    Route::post('/add-to-cart', 'addToCart')->name('clientAddToCart');
+    Route::post('/update-cart', 'updateCart')->name('clientUpdateCart');
+    Route::post('/delete-cart', 'deleteCart')->name('clientDeleteCart');
 });
 
 Auth::routes();
