@@ -33,7 +33,7 @@
                         <tr>
                             <td><b>Kode Pesanan</b></td>
                             <td>&nbsp; : &nbsp;</td>
-                            <td><b><u>Rp. {{ $order->order_code }}</u></b></td>
+                            <td><b><u>{{ $order->order_code }}</u></b></td>
                         </tr>
                         <tr>
                             <td><b>Total</b></td>
